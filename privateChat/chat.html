@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .room {
+            width: 800px;
+            margin: 0 auto;
+            background: rgb(234,234,234);
+            padding: 0px 10px;
+            border-radius: 10px;
+        }
+
+        .list {
+            width: 780px;
+            margin: 0 auto;
+            margin-top: 10px;
+            height: 600px;
+            border: 1px solid rgb(212,212,212);
+            background: white;
+            overflow: auto;
+        }
+
+        .sender {
+            width: 780px;
+            margin: 0 auto;
+            margin-top: 10px;   
+        }
+
+        .sender .msg {
+            width: 600px;
+            height: 30px;
+        }
+        
+        .othmsg {
+            width: 600px;
+            padding: 5px;
+            border: 1px solid rgb(234,234,234);
+            border-radius: 5px;
+            margin-top: 5px;
+            margin-left: 5px;
+            background: white;
+        }
+
+        .mymsg {
+            width: 600px;
+            padding: 5px;
+            border: 1px solid rgb(234,234,234);
+            border-radius: 5px;
+            margin-top: 5px;
+            background: skyblue;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="room">
+        <div class="list">
+
+        </div>
+
+        <div class="sender">
+            <input type="text" class="msg">
+            <input type="button" value="发送" class="btnsend">
+        </div>
+    </div>
+</body>
+</html>
+<script src="./js/jquery.js"></script>
+<script>
+    // websocket 客户端
+    var ws = new WebSocket('ws://127.0.0.1:3000?userid='+2); // 这个是H5中提供的
+
+    // websocket的四个事件
+    ws.onopen = function (ev) {
+
+    };
+
+    ws.onmessage = function (ev) {
+        // console.log(ev)
+        var d = JSON.parse(ev.data);
+        if (d.type == "msg") {
+            $('.list').append('<div class="othmsg">' + d.content + '</div>');
+        }
+    };
+
+    ws.onerror = function (ev) {
+
+    };
+
+    ws.onclose = function (ev) {
+
+    };
+
+    $(".btnsend").click(function () {
+        var msg = $('.msg').val();
+        $('.msg').val('');
+        var mymsg = '<div class="mymsg">' + msg + '</div>';
+        $(".list").append(mymsg);
+
+        // 把消息发送到服务器
+        ws.send(msg);
+    })
+
+function GetRequest() {   
+   var url = location.search; //获取url中"?"符后的字串   
+   var theRequest = new Object();   
+   if (url.indexOf("?") != -1) {   
+      var str = url.substr(1);   
+      strs = str.split("&");   
+      for(var i = 0; i < strs.length; i ++) {   
+         theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);   
+      }   
+   }   
+   return theRequest.id;   
+}   
+
+console.log(GetRequest('file:///C:/node/night/00.yiduiyi.html?id=2'));
+
+</script>

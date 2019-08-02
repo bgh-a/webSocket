@@ -1,0 +1,13 @@
+2019-08-02 17:40:08 pid:1 Error: Call to a member function send() on null in C:\Users\hou\Desktop\myserver\chat.php:38
+Stack trace:
+#0 [internal function]: {closure}(Object(Workerman\Connection\TcpConnection), '\xE4\xBE\xAF\xE9\x98\xBF\xE5\xBA\xB7')
+#1 C:\Users\hou\Desktop\myserver\workerman\Connection\TcpConnection.php(658): call_user_func(Object(Closure), Object(Workerman\Connection\TcpConnection), '\xE4\xBE\xAF\xE9\x98\xBF\xE5\xBA\xB7')
+#2 [internal function]: Workerman\Connection\TcpConnection->baseRead(Resource id #20)
+#3 C:\Users\hou\Desktop\myserver\workerman\Events\Select.php(294): call_user_func_array(Array, Array)
+#4 C:\Users\hou\Desktop\myserver\workerman\Worker.php(2359): Workerman\Events\Select->loop()
+#5 C:\Users\hou\Desktop\myserver\workerman\Worker.php(1353): Workerman\Worker->run()
+#6 C:\Users\hou\Desktop\myserver\workerman\Worker.php(1296): Workerman\Worker::forkWorkersForWindows()
+#7 C:\Users\hou\Desktop\myserver\workerman\Worker.php(509): Workerman\Worker::forkWorkers()
+#8 C:\Users\hou\Desktop\myserver\chat.php(53): Workerman\Worker::runAll()
+#9 {main}
+2019-08-02 17:40:08 pid:1 Worker process terminated
