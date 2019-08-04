@@ -102,7 +102,15 @@
         $(".list").append(mymsg);
 
         // 把消息发送到服务器
-        ws.send(msg);
+        var data = GetRequest();
+        if ($.isEmptyObject(data)) {
+           return ws.send(msg);
+        } 
+
+        var toId = data.toid;
+        var userId = data.userid;
+        // alert(toId);
+        ws.send(toId+":"+msg);
     })
 
 function GetRequest() {   

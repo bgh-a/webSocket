@@ -6,19 +6,27 @@ require_once "workerman/Autoloader.php";
 $wsServer = new \Workerman\Worker('websocket://127.0.0.1:3000');
 
 $userIds = [];
-// 当有人连接的时候，发生的事情
+// 保存所有的用户
+$users = [];
+
+$toUser = [];
+$userConn = [];
+
 $wsServer->onConnect = function ($conn) {
     $conn->onWebSocketConnect = function ($conn, $http_header) {
-        // 保存这个客户端所在的房间号
-    var_dump($_GET['userid']);
-        $conn->user_id = $_GET['userid'];
-        // $connection->room_id = $_GET['room_id'];
+        // 保存当前用户信息
+        global $users, $worker, $userConn;
 
-        global $userIds;
-        // // 把这个客户端保存到自己房间的数组中
-        $userIds[$_GET['userid']] = $conn;
+     
+        if ($_GET['toid']) {
+            echo "哈哈";
+        }
+
+         $users[$_GET['userid']] = $_GET['userid'];
+         $userConn[$_GET['userid']] = $conn;
+
     };
-//    echo  $_GET['uid'];
+    // var_dump($toUser);
 
     // 心跳是让服务器与客服端处于长连接的状态
     \Workerman\Lib\TImer::add(1,function ()use ($conn) {
@@ -28,17 +36,15 @@ $wsServer->onConnect = function ($conn) {
 };
 
 $wsServer->onMessage = function ($conn,$data) {
-    // 数组 $conn->worker->connections 保存的是所有连接的人员
-    // foreach ($conn->worker->connections as $v) {
-    //     if ($v != $conn) {
-    //         $v->send(json_encode(array("type" => "msg", "content" => $data)));
-    //     }
-    // }
+   
+    global $users, $worker, $userConn;
 
-    foreach($userIds[$conn->user_id] as $c)
-    {
-        $c->send($data);
-    }
+    $ret = explode(":",$data);
+    $toUser = $ret[0];
+    $rawData = implode(':', $ret);
+    $userConn[$toUser]->send($rawData);
+   
+   
 };
 
 // 这个是出问题的时候
